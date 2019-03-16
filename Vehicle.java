@@ -5,13 +5,13 @@ public class Vehicle {
 	private int power;
 	private int numWheels;
 	// Initialize public constants
-	public int ELECTRIC_MOTOR;
-	public int GAS_ENGINE;
+	public static final int ELECTRIC_MOTOR = 0;
+	public static final int GAS_ENGINE = 1;
 	
 	/**
 	 * Constructor Method to create a vehicle object with the parameters
 	 * @param mfr - Vehicle Manufacturer
-	 * @param color - Color of vehicle
+	 * @param color - Color of vehicle ie. "red", "black", etc.
 	 * @param power - Power of vehicle
 	 * @param numWheels - Number of wheels the vehicle has
 	 */
