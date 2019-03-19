@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Scanner;
 
-import Car.Model;
-
 public class CarDealershipSimulator 
 {
   public static void main(String[] args)
@@ -34,7 +32,7 @@ public class CarDealershipSimulator
 	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.MINIVAN, 300, 10.9, true, 999.55));
 	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 400, 5.6, false, 23.33));
 	  priceCompare.add(new Car("Toyota", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 345, 4.2, true, 544.55));
-	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 100, 5.6, false, 9964.4));
+	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 100, 9.25, false, 9964.4));
 	  System.out.println("Before sort: ");
 	  for (Car car : priceCompare) {
 		  System.out.println(car.display());
@@ -59,10 +57,23 @@ public class CarDealershipSimulator
 	  cardealer.displayInventory();
 	  System.out.println("buying car");
 	  Car saveCar = cardealer.buyCar(2);
+	  try {
+		  cardealer.buyCar(23);
+	  } catch (IndexOutOfBoundsException e) {
+		  System.out.println(e.getMessage());
+	  }
 	  System.out.println("RETURNED CAR: " + saveCar.display());
 	  cardealer.displayInventory();
-	  System.out.println("Returning Car: ");
-	  cardealer.returnCar(saveCar);
+	  try {
+		System.out.println("Returning Car: ");
+		cardealer.returnCar(saveCar);
+		System.out.println("Attempt to return null");
+		Car nullCar = null;
+		cardealer.returnCar(nullCar);
+	  } catch (IllegalArgumentException exception) {
+		  System.out.println(exception.getMessage());
+	  }
+	  CarDealership.
 	  cardealer.displayInventory();
 	  System.out.println("Sort by Price: ");
 	  cardealer.sortByPrice();
@@ -90,9 +101,14 @@ public class CarDealershipSimulator
 
 
 	  // Create a CarDealership object
-	  	  
+	  CarDealership dealership = new CarDealership();
 	  // Then create an (initially empty) array list of type Car
-      // Then create some new car objects of different types
+	  ArrayList<Car> cars = new ArrayList<Car>();
+	  // Then create some new car objects of different types
+	  cars.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 500, 9.5, true, 25000));
+	  cars.add(new Car("Honda", "red	", Car.GAS_ENGINE, Car.Model.SPORTS, 450, 9.2, true, 30000));
+	  cars.add(new Car("Kia", "white", Car.GAS_ENGINE, Car.Model.MINIVAN, 500, 9.5, true, 25000));
+	  cars.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 500, 9.5, true, 25000));
 	  // See the cars file for car object details
 	  // Add the car objects to the array list
       // The ADD command should hand this array list to CarDealership object via the addCars() method	  

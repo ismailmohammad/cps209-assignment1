@@ -21,6 +21,10 @@ public class CarDealership {
     public CarDealership() {
         cars = new ArrayList<Car>();
     }
+
+    public CarDealership(ArrayList<Car> cars) {
+        this.cars = cars;
+    }
     
     static class SafetyRatingSorter implements Comparator<Car> {
         /**
@@ -58,17 +62,33 @@ public class CarDealership {
         }
     }
 
-    public Car buyCar(int index) {
-        // If index is less than size of
+    /**
+     * Attempts to purchase Car from dealership via index of Car as displayed by displayInventory()
+     * @param index
+     * @return returns a reference to the Car object being purchased.
+     * @throws IndexOutOfBoundsException
+     */
+    public Car buyCar(int index) throws IndexOutOfBoundsException {
+        // If index is greater than size of ArrayList of Cars less 1 or if negative, throw IOOBE
+        if (index > (cars.size() -1) || (index < 0)) {
+            throw new IndexOutOfBoundsException("Index of Car must be within list of cars displayed and cannot be negative.");
+        }
         return cars.remove(index);
     }
 
-    public void returnCar(Car car) {
-        // Make sure reference is not null
-        if (car != null) {
-            cars.add(car);
+    /**
+     * Attempts to return a car to the dealership and throws IllegalArgumentException
+     * if the reference to the Car object is null. ie. an invalid reference.
+     * @param car Car object which is to be returned to the dealership.
+     * @throws IllegalArgumentException
+     */
+    public void returnCar(Car car) throws IllegalArgumentException {
+        // Make sure Car reference is not null
+        if (car == null) {
+            throw new IllegalArgumentException("The last Car bought has already been returned. Return will not be processed.");
         }
-        // Exception if null
+        // Add Car to the ArrayList
+        cars.add(car);
     }
 
     public void displayInventory() {
@@ -100,8 +120,17 @@ public class CarDealership {
         AWDFilter = true;
     }
 
-    public void filterByPrice(double minPrice, double maxPrice) {
-        // If minprice is more than max price
+    /**
+     * Sets price filter on the CarDealership using the minimum and maximum price as provided.
+     * @param minPrice Minimum price of Car to filter
+     * @param maxPrice Maximum price of Car to filter
+     * @throws IllegalArgumentException
+     */
+    public void filterByPrice(double minPrice, double maxPrice) throws IllegalArgumentException {
+        // If
+        if () {
+
+        }
         priceFilter = true;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;

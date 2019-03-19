@@ -74,7 +74,7 @@ class Car extends Vehicle implements Comparable<Car> {
      * @return the string representation "MANUFACTURER COLOUR MODEL MAX_RANGE SAFETY_RATING AWD PRICE"
      */
     public String display(){
-        return String.format("%s %s %.1f$ %d %.1f %b", super.display(), model, price, maxRange, safetyRating, AWD);
+        return super.display() + " " + model + " " + String.format("%.1f", price) + maxRange + safetyRating + AWD;
     }
 
     /**
