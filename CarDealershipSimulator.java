@@ -66,6 +66,9 @@ public class CarDealershipSimulator
 	  System.out.println("Sort by Price: ");
 	  cardealer.sortByPrice();
 	  cardealer.displayInventory();
+	  System.out.println("Sort by Safety Rating: ");
+	  cardealer.sortBySafetyRating();
+	  cardealer.displayInventory();
 
 
 	  // Create a CarDealership object

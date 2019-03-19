@@ -1,5 +1,3 @@
-import com.sun.javafx.sg.prism.NGShape.Mode;
-
 class Car extends Vehicle implements Comparable<Car> {
     // Instance Variables
     private String model;
@@ -31,6 +29,14 @@ class Car extends Vehicle implements Comparable<Car> {
         this.safetyRating = safetyRating;
         this.AWD = AWD;
         this.price = price;
+    }
+
+    /**
+     * Fetches the safetyRating of the Car object in question.
+     * @return the safety rating
+     */
+    public double getSafetyRating() {
+        return safetyRating;
     }
 
     /**

@@ -13,9 +13,22 @@ public class CarDealership {
     private double minPrice;
     private double maxPrice;
 
-    
     public CarDealership() {
         cars = new ArrayList<Car>();
+    }
+    
+    class SafetyRatingSorter implements Comparable<Car> {
+        /**
+         * 
+         * @param initial Car object
+         * @param other Car object to compare against.
+         * @return 1 if 
+         */
+        public int compareTo(Car initial, Car other)  {
+            if (initial.getSafetyRating() > other.getSafetyRating()) { return 1; }
+            if (initial.getSafetyRating() < other.getSafetyRating()) { return -1; }
+            return 0;
+        }
     }
 
     public void addCars(ArrayList<Car> newCars) {
@@ -64,5 +77,9 @@ public class CarDealership {
 
     public void sortByPrice() {
         Collections.sort(cars);
+    }
+
+    public void sortBySafetyRating() {
+        Array.sort(cars, new SafetyRatingSorter());
     }
 }
