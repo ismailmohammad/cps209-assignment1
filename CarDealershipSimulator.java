@@ -22,19 +22,19 @@ public class CarDealershipSimulator
 	  System.out.println(v2.display());
 	  System.out.println(v3.display());
 	  // Test Cars
-	  Car c1 = new Car("Honda", "blue", 2, 4, Car.Model.SEDAN, 2, 5.6, true, 995556.22);
+	  Car c1 = new Car("Honda", "blue", 2, Car.Model.SEDAN, 2, 5.6, true, 995556.22);
 	  System.out.println(c1.display());
 	  // Test Car eqality
-	  Car c2 = new Car("Honda", "blue", 2, 4, Car.Model.SEDAN, 2, 5.6, true, 995556.22);
+	  Car c2 = new Car("Honda", "blue", 2, Car.Model.SEDAN, 2, 5.6, true, 995556.22);
 	  System.out.println("Cars 1 and 2 are equal? Expect true: " + Boolean.toString(c1.equals(c2)));
-	  Car c3 = new Car("Honda", "blue", 2, 6, Car.Model.SEDAN, 2, 5.6, true, 995556.22);
+	  Car c3 = new Car("Honda", "blue", 2, Car.Model.SEDAN, 2, 5.6, true, 995556.22);
 	  System.out.println("Cars 1 and 3 are equal? expect false: " + Boolean.toString(c1.equals(c3)));
 	  // Test Car compareTo
 	  ArrayList<Car> priceCompare = new ArrayList<Car>();
-	  priceCompare.add(new Car("Honda", "blue", Car.ELECTRIC_MOTOR, 4, Car.Model.MINIVAN, 2, 5.6, true, 999.55));
-	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, 4, Car.Model.SEDAN, 2, 5.6, true, 23.33));
-	  priceCompare.add(new Car("Toyota", "blue", Car.ELECTRIC_MOTOR, 4, Car.Model.SEDAN, 2, 5.6, true, 544.55));
-	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, 4, Car.Model.SEDAN, 2, 5.6, true, 9964.4));
+	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.MINIVAN, 300, 10.9, true, 999.55));
+	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 400, 5.6, false, 23.33));
+	  priceCompare.add(new Car("Toyota", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 345, 4.2, true, 544.55));
+	  priceCompare.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 100, 5.6, false, 9964.4));
 	  System.out.println("Before sort: ");
 	  for (Car car : priceCompare) {
 		  System.out.println(car.display());
@@ -46,14 +46,15 @@ public class CarDealershipSimulator
 	//   }
 	  // Electric Car Testing
 	  System.out.println("Testing Electric Cars: ");
-	  ElectricCar e1 = new ElectricCar("Honda", "blue", 2, 4, Car.Model.MINIVAN, 2, 5.6, true, 9964.4, 45, "Lithium");
-	  ElectricCar e2 = new ElectricCar("Honda", "blue", 2, 4, Car.Model.SPORTS, 2, 5.6, true, 964.4, 45, "Lithium");
+	  ElectricCar e1 = new ElectricCar("Honda", "blue", Car.ELECTRIC_MOTOR, Car.Model.MINIVAN, 2, 2.2, true, 9964.4, 45, "Lithium");
+	  ElectricCar e2 = new ElectricCar("Honda", "blue", Car.ELECTRIC_MOTOR, Car.Model.SPORTS, 2, 5.6, false, 964.4, 45, "Lithium");
 	  System.out.println(e1.display());
 	  System.out.println(e1.compareTo(e2));
 	  System.out.println();
 	  // Create CarDealership Object
 	  CarDealership cardealer = new CarDealership();
 	  priceCompare.add(e1);
+	  priceCompare.add(e2);
 	  cardealer.addCars(priceCompare);
 	  cardealer.displayInventory();
 	  System.out.println("buying car");
@@ -69,6 +70,23 @@ public class CarDealershipSimulator
 	  System.out.println("Sort by Safety Rating: ");
 	  cardealer.sortBySafetyRating();
 	  cardealer.displayInventory();
+	  System.out.println("Sort by Maximum Range");
+	  cardealer.sortByMaxRange();
+	  cardealer.displayInventory();
+	  System.out.println("Filter by Electric: ");
+	  cardealer.filterByElectric();
+	  cardealer.displayInventory();
+	  cardealer.filtersClear();
+	  System.out.println("Filter by AWD: ");
+	  cardealer.filterByAWD();
+	  cardealer.displayInventory();
+	  System.out.println("Filter by price 500 to 1000");
+	  cardealer.filtersClear();
+	  cardealer.filterByPrice(500, 1000);
+	  cardealer.sortByPrice();
+	  cardealer.displayInventory();
+	  cardealer.filtersClear();
+
 
 
 	  // Create a CarDealership object

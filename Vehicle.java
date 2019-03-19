@@ -1,3 +1,7 @@
+/**
+ * Vehicle.java
+ * Mohammad Ismail
+ */
 public class Vehicle {
 	// Instance variables
 	private String mfr;

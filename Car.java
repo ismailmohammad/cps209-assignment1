@@ -5,6 +5,9 @@ class Car extends Vehicle implements Comparable<Car> {
     private double safetyRating;
     private boolean AWD;
     private double price;
+    // Constant for number of car wheels. All cars have 4 wheels
+    // unless speaking of the 2016 Pembleton Supersports or of that sort.
+    public static final int NUM_CAR_WHEELS = 4;
 
     public enum Model {
         SEDAN, SUV, SPORTS, MINIVAN
@@ -15,15 +18,16 @@ class Car extends Vehicle implements Comparable<Car> {
      * @param mfr String of Manufacturer of Car ie. "Honda", "Toyota", etc.
      * @param color String of colour of Car i.e. "red", "black", etc.
      * @param power Int of power type of Car 0 for electric, 1 for gas
-     * @param numWheels Int of number of wheels of Car i.e. 4
+     * @param numWheels Int of number of wheels of Car i.e. 4. This was left as being
+     * user inputtable despite all cars having 
      * @param model
      * @param maxRange
      * @param safetyRating
      * @param AWD
      * @param price
      */
-    public Car(String mfr, String color, int power, int numWheels, Model model, int maxRange, double safetyRating, boolean AWD, double price){
-        super(mfr, color, power, numWheels);
+    public Car(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price){
+        super(mfr, color, power, NUM_CAR_WHEELS);
         this.model = model.toString();
         this.maxRange = maxRange;
         this.safetyRating = safetyRating;
@@ -37,6 +41,30 @@ class Car extends Vehicle implements Comparable<Car> {
      */
     public double getSafetyRating() {
         return safetyRating;
+    }
+
+    /**
+     * Fetches the Maximum range of the car
+     * @return the max range of the Car object.
+     */
+    public int getMaxRange() {
+        return maxRange;
+    }
+
+    /**
+     * Fetches whether the car is AWD capable
+     * @return the AWD status of vehicle.
+     */
+    public boolean getAWD() {
+        return AWD;
+    }
+
+    /**
+     * Fetches the price of the Car object
+     * @return the price
+     */
+    public double getPrice() {
+        return price;
     }
 
     /**
@@ -55,6 +83,7 @@ class Car extends Vehicle implements Comparable<Car> {
      * @param other The car object to compare against
      * @return whether the Car objects are equal.
      */
+    @Override
     public boolean equals(Object other) {
         Car otherCar = (Car) other;
         // Checks power, mfr, and numWheels
@@ -107,9 +136,9 @@ class ElectricCar extends Car {
      * @param rechargeTime Int of number of minutes it takes to recharge car
      * @param batteryType String of the type of battery ie. "Lithium Ion", etc.
      */
-    public ElectricCar(String mfr, String color, int power, int numWheels, Model model, int maxRange, double safetyRating, boolean AWD, double price, int rechargeTime, String batteryType) {
+    public ElectricCar(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price, int rechargeTime, String batteryType) {
         // Call superclass's constructor method.
-        super(mfr, color, power, numWheels, model, maxRange, safetyRating, AWD, price);
+        super(mfr, color, power, model, maxRange, safetyRating, AWD, price);
         // Initialize electric car instance variables with values.
         this.rechargeTime = rechargeTime;
         this.batteryType = batteryType;
