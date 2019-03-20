@@ -154,7 +154,12 @@ class ElectricCar extends Car {
         super(mfr, color, power, model, maxRange, safetyRating, AWD, price);
         // Initialize electric car instance variables with respective values.
         this.rechargeTime = rechargeTime;
-        this.batteryType = batteryType;
+        // If battery type is not specified. i.e an empty string, it will default to Lithium
+        if (batteryType.equals("")) {
+            this.batteryType = "Lithium";
+        } else {
+            this.batteryType = batteryType;
+        }
     }
 
     /**
