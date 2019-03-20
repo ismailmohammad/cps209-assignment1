@@ -1,3 +1,8 @@
+/**
+ * CPS 209 Assignment 1
+ * Car.java
+ * @author Mohammad Ismail
+ */
 class Car extends Vehicle implements Comparable<Car> {
     // Instance Variables
     private String model;
@@ -5,10 +10,17 @@ class Car extends Vehicle implements Comparable<Car> {
     private double safetyRating;
     private boolean AWD;
     private double price;
-    // Constant for number of car wheels. All cars have 4 wheels
-    // unless speaking of the 2016 Pembleton Supersports or of that sort.
+
+    /**
+     * Constant for number of car wheels. All cars have 4 wheels
+     * unless speaking of the 2016 Pembleton Supersports or of that sort.
+     */
     public static final int NUM_CAR_WHEELS = 4;
 
+    /**
+     * Enumerate model into the 4 possible types of Cars. Sedan,
+     * SUV, Sports, and Minivan.
+     */
     public enum Model {
         SEDAN, SUV, SPORTS, MINIVAN
     }
@@ -18,15 +30,15 @@ class Car extends Vehicle implements Comparable<Car> {
      * @param mfr String of Manufacturer of Car ie. "Honda", "Toyota", etc.
      * @param color String of colour of Car i.e. "red", "black", etc.
      * @param power Int of power type of Car 0 for electric, 1 for gas
-     * @param numWheels Int of number of wheels of Car i.e. 4. This was left as being
-     * user inputtable despite all cars having 
-     * @param model
-     * @param maxRange
-     * @param safetyRating
-     * @param AWD
-     * @param price
+     * @param model Model of the car
+     * @param maxRange Maximum range of the Car assuming full fuel/energy capacity
+     * @param safetyRating Safety Standard rating for the Car in question.
+     * @param AWD Whether the Car is AWD capable or 2WD
+     * @param price Price of the car in dollars and cents.
      */
     public Car(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price){
+        // The superclass constructor call implements the NUM_CAR_WHEELS instead of an extra parameter as
+        // all cars have 4 wheels with the exception of some very uncommon 3 wheeled 'Cars'.
         super(mfr, color, power, NUM_CAR_WHEELS);
         this.model = model.toString();
         this.maxRange = maxRange;
@@ -70,12 +82,12 @@ class Car extends Vehicle implements Comparable<Car> {
     /**
      * Returns string representation of Car separated by spaces.
      * That is, return Car's vehicle characteristics along with
-     * model, max range, safety rating, all wheel drive capable, and price.
-     * @return the string representation "MANUFACTURER COLOUR MODEL MAX_RANGE SAFETY_RATING AWD PRICE"
+     * model, price, safety rating, and maximum range.
+     * @return the string representation "MANUFACTURER COLOUR MODEL PRICE SAFEY_RATING MAX_RANGE"
      */
     public String display(){
-        return super.display() + " " + model + " " + String.format("%.1f", price) + maxRange + safetyRating + AWD;
-    }
+        return super.display() + " " + model + String.format(" %.1f$ ", price) + "SF: " + safetyRating + " RNG: " + maxRange ;
+    }   
 
     /**
      * Compares the Car object with the object in the parameter for equality. Checks manufacturer,
@@ -120,26 +132,27 @@ class Car extends Vehicle implements Comparable<Car> {
 class ElectricCar extends Car {
     // Electric Car Instance Variables
     private int rechargeTime; // Recharge time in minutes
-    private String batteryType;
+    private String batteryType; // Type of battery of Car
 
     /**
      * Constructor Method for Electric car
      * @param mfr String of Manufacturer of Car ie. "Honda", "Toyota", etc.
      * @param color String of colour of Car i.e. "red", "black", etc.
      * @param power Int of power type of Car 0 for electric, 1 for gas
-     * @param numWheels Int of number of wheels of Car i.e. 4
-     * @param model
-     * @param maxRange
-     * @param safetyRating
-     * @param AWD
-     * @param price 
+     * @param numWheels Int of number of wheels of Car i.e. 4. It is assumed that
+     * all cars have 4 wheels.
+     * @param model Model of the car
+     * @param maxRange Maximum range of the Car assuming full fuel/energy capacity
+     * @param safetyRating Safety Standard rating for the Car in question.
+     * @param AWD Whether the Car is AWD capable or 2WD
+     * @param price Price 
      * @param rechargeTime Int of number of minutes it takes to recharge car
      * @param batteryType String of the type of battery ie. "Lithium Ion", etc.
      */
     public ElectricCar(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price, int rechargeTime, String batteryType) {
         // Call superclass's constructor method.
         super(mfr, color, power, model, maxRange, safetyRating, AWD, price);
-        // Initialize electric car instance variables with values.
+        // Initialize electric car instance variables with respective values.
         this.rechargeTime = rechargeTime;
         this.batteryType = batteryType;
     }
@@ -180,11 +193,11 @@ class ElectricCar extends Car {
      * Returns string representation of Car separated by spaces.
      * That is, return Car's vehicle characteristics along with
      * model, max range, safety rating, all wheel drive capablibility, price,
-     * battery recharge time, and
+     * battery type, and battery recharge time.
      * @return the string representation as follows
-     * "MANUFACTURER COLOUR MODEL MAX_RANGE SAFETY_RATING AWD PRICE RECHARGE_TIME BAT_TYPE"
+     * "MANUFACTURER COLOUR MODEL PRICE SAFETY_RATING MAX_RANGE BAT_TYPE RECHARGE_TIME"
      */
     public String display(){
-        return String.format("%s %d %s", super.display(), rechargeTime, batteryType);
+        return String.format("%s EL, BAT: %s RCH: %d", super.display(), batteryType, rechargeTime);
     }
 }

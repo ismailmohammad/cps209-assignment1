@@ -1,6 +1,7 @@
 /**
+ * CPS 209 Assignment 1
  * Vehicle.java
- * Mohammad Ismail
+ * @author Mohammad Ismail
  */
 public class Vehicle {
 	// Instance variables

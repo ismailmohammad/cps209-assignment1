@@ -1,13 +1,54 @@
 /**
- * Mohammad Ismail
+ * CPS 209 Assignment 1
+ * CarDealershipSimulator.java
+ * @author Mohammad Ismail
  */
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class CarDealershipSimulator 
 {
+	/** Contains a reference to the last Car bought from the dealership.*/
+	private Car lastCarBought;
+	/** Constant of number of columns expected for an electric car */
+	public static final int ELECTRIC_CAR_COLUMNS = 9;
+	/** Constant of number of columns expected for a gas car */
+	public static final int GAS_CAR_COLUMNS = 8;
+	/** Expected location of the type of power the Car uses within data */
+	public static final int POWER_TYPE_LOCATION = 3;
+	/** Enumerated Available Commands */
+	public static enum Commands {
+		L, Q, BUY, RET, ADD, SPR, SSR, SMR, FPR, FEL, FAW, FCL
+	}
+
+	/**
+	 * A list of default cars identical to the provided cars.txt
+	 * should cars.text not be found and throw an exception and only as a 
+	 * backup after prompting user whether this is the route they'd like to take. 
+	 * Not intended to circumvent any expectectations of File I/O.
+	 */
+	public static String demoCars = "Toyota     blue   SEDAN   GAS_ENGINE      9.5  500 2WD 25000\n"
+	+ "Honda           red      SPORTS  GAS_ENGINE      9.2  450 2WD 30000\n" 
+	+ "Kia        white  MINIVAN GAS_ENGINE      9.7  550 2WD 20000\n"
+	+ "BMW        black  SEDAN   GAS_ENGINE      9.6  600 AWD 55000\n"
+	+ "Tesla      red    SEDAN   ELECT R IC_MOTOR  9.1  425 AWD 85000  30\n"
+	+ "Chevy      red    MINIVAN GAS_ENGINE      9.25 475 2WD 40000\n"
+	+ "Chevy      red    MINIVAN GAS_ENGINE      9.25 475 2WD 40000\n"
+	+ "ChevyVolt  green  SEDAN   ELECTRIC_MOTOR  8.9  375 AWD 37000  45\n"
+	+ "Bentley    black  SEDAN   GAS_ENGINE      9.8  575 2WD 150000\n"
+	+ "NissanLeaf green  SEDAN   ELECTRIC_MOTOR  8.8  325 AWD 32000  55";
+
+	public void name() {
+		
+	}
+
+	public void loadFile(String filename) {
+		System.out.println("File Loaded");
+	}
+	
   public static void main(String[] args)
   {
 	  Vehicle v1 = new Vehicle("Honda", "blue", 2, 4);
@@ -73,7 +114,6 @@ public class CarDealershipSimulator
 	  } catch (IllegalArgumentException exception) {
 		  System.out.println(exception.getMessage());
 	  }
-	  CarDealership.
 	  cardealer.displayInventory();
 	  System.out.println("Sort by Price: ");
 	  cardealer.sortByPrice();
@@ -97,24 +137,51 @@ public class CarDealershipSimulator
 	  cardealer.sortByPrice();
 	  cardealer.displayInventory();
 	  cardealer.filtersClear();
-
-
+	  System.out.println("Filter by AWD and Electric and Price: ");
+	  cardealer.filterByAWD();
+	  cardealer.filterByElectric();
+	  cardealer.displayInventory();
+	  System.out.println(demoCars);
 
 	  // Create a CarDealership object
 	  CarDealership dealership = new CarDealership();
 	  // Then create an (initially empty) array list of type Car
 	  ArrayList<Car> cars = new ArrayList<Car>();
 	  // Then create some new car objects of different types
-	  cars.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 500, 9.5, true, 25000));
-	  cars.add(new Car("Honda", "red	", Car.GAS_ENGINE, Car.Model.SPORTS, 450, 9.2, true, 30000));
-	  cars.add(new Car("Kia", "white", Car.GAS_ENGINE, Car.Model.MINIVAN, 500, 9.5, true, 25000));
-	  cars.add(new Car("Honda", "blue", Car.GAS_ENGINE, Car.Model.SEDAN, 500, 9.5, true, 25000));
+	  
 	  // See the cars file for car object details
 	  // Add the car objects to the array list
       // The ADD command should hand this array list to CarDealership object via the addCars() method	  
 	  
 	  // Create a scanner object
-	  
+	  Scanner scanner = new Scanner(demoCars);
+	  while (scanner.hasNextLine()) {
+		  String line = scanner.nextLine();
+		  ArrayList<String> params = new ArrayList<String>();
+		  StringTokenizer tokenizer = new StringTokenizer(line);
+		  int numColumns = tokenizer.countTokens();
+		  System.out.println(numColumns);
+		  // If the data has more than 9 or less than 8 columns, it is invalid
+		  if (numColumns > ELECTRIC_CAR_COLUMNS || numColumns < GAS_CAR_COLUMNS) {
+			  System.out.println("The Car Data: `" + line + "` is Invalid, skipping. Please ensure data follows formatting as follows: MFR COLOR MODEL POWER_TYPE SAFETY_RATING MAX_RANGE AWD/2WD PRICE RCH_TIME(only if Electric)");
+			  continue;
+		  }
+		  for (int fieldIndex = 0; fieldIndex < numColumns; fieldIndex++) {
+			  params.add(tokenizer.nextToken());
+		  }
+		  // Get
+		  if () {
+
+		  } else if () {
+
+		  } else {
+			System.out.println("The Car Data: `" + line + "` is Invalid, skipping. Please ensure data follows formatting as follows: MFR COLOR MODEL POWER_TYPE SAFETY_RATING MAX_RANGE AWD/2WD PRICE RCH_TIME(only if Electric)");
+			continue;
+		  }
+	  }
+	  scanner.close();
+
+
 	  // while the scanner has another line
 	  //    read the input line
 	  //    create another scanner object (call it "commandLine" or something) using the input line instead of System.in
