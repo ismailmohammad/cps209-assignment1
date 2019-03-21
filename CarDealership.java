@@ -12,9 +12,9 @@ public class CarDealership {
     // Arraylist of Cars
     private ArrayList<Car> cars; // Reference variable to ArrayList of Cars
     // Filter Flags
-    private boolean electricFilter;
-    private boolean AWDFilter;
-    private boolean priceFilter;
+    private boolean electricFilter = false;
+    private boolean AWDFilter = false;
+    private boolean priceFilter = false;
     // Price filter min, max
     private double minPrice;
     private double maxPrice;
@@ -102,7 +102,7 @@ public class CarDealership {
     public void returnCar(Car car) throws IllegalArgumentException {
         // Make sure Car reference is not null
         if (car == null) {
-            throw new IllegalArgumentException("The last Car bought has already been returned. Return will not be processed.");
+            throw new IllegalArgumentException("The last Car bought has already been returned or a purchase has not yet occurred. Return will not be processed.");
         }
         // Add Car to the ArrayList
         cars.add(car);
