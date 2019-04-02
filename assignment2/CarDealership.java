@@ -1,5 +1,5 @@
 /**
- * CPS 209 Assignment 1
+ * CPS 209 Assignment 2
  * CarDealership.java
  * @author Mohammad Ismail
  */

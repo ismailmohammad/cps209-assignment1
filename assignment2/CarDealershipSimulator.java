@@ -1,8 +1,7 @@
 /**
- * CPS 209 Assignment 1
+ * CPS 209 Assignment 2
  * CarDealershipSimulator.java
  * @author Mohammad Ismail
- * 500777447 m11ismail
  */
 import java.io.File;
 import java.io.FileNotFoundException;
