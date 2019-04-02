@@ -64,6 +64,9 @@ public class CarDealershipSimulator
 		int tokenNum; // To contain number of user entered tokens per line
 		Scanner commandLine;
 		String command;
+		// Greet User.
+		System.out.println("Welcome to Car Dealership Simulator 2.0.0 (Goat Rentals coming soon in v11.11.0)");
+		System.out.print("Please enter a command or Q to quit: ");
 		// while the scanner has another line
 		while (in.hasNextLine()) {
 			// read the input line
@@ -88,7 +91,7 @@ public class CarDealershipSimulator
 					else { dealership.displayInventory(); }
 				// Check if Q or the quit command is invoked and if so, bid adieu and break out of while.
 				} else if (command.equalsIgnoreCase("Q")) {
-					System.out.println("Goodbye");
+					System.out.println("Goodbye.");
 					break;
 				// First check if the command is to BUY a car and then ensure that it has one argument
 				} else if (command.equalsIgnoreCase("BUY")) {
@@ -104,7 +107,7 @@ public class CarDealershipSimulator
 						try {
 							carIndex = Integer.parseInt(commandLine.next());
 						} catch (IllegalArgumentException parseExcept) {
-							System.out.println("Invalid BUY argument. Please enter a positive whole number after BUY");
+							System.out.println("Invalid BUY argument. Please enter a positive whole number after BUY\n");
 							continue; // Continue to the next command.
 						}
 						// Attempt to purchase the indicated Car
@@ -127,15 +130,15 @@ public class CarDealershipSimulator
 				// Sort by Price of Car in Ascending order
 				} else if (command.equalsIgnoreCase("SPR")) {
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
-					else { dealership.sortByPrice(); }
+					else { dealership.sortByPrice(); System.out.println("Sorted by Price in Ascending Order.\n");}
 				// Sort by Safety Rating in Descending order.
 				} else if (command.equalsIgnoreCase("SSR")) {
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
-					else { dealership.sortBySafetyRating(); }
+					else { dealership.sortBySafetyRating(); System.out.println("Sorted by Safety Rating in Descending Order.\n");}
 				// Sort by Maximum Range of car in Descending order.
 				} else if (command.equalsIgnoreCase("SMR")) {
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
-					else { dealership.sortByMaxRange(); }
+					else { dealership.sortByMaxRange(); System.out.println("Sorted by Max Range in Descending Order.\n"); }
 				// Filter by price; via minimum and maximum price.
 				} else if (command.equalsIgnoreCase("FPR")) {
 					// Check if more than 2 arguments provided
@@ -183,6 +186,7 @@ public class CarDealershipSimulator
 			} else {
 				promptValid();
 			}
+			System.out.print("Please enter a command or Q to quit: ");
 		}
 
 	}
@@ -192,7 +196,7 @@ public class CarDealershipSimulator
 	 * @param command command entered.
 	 */
 	private static void promptValid() {
-		System.out.println("The command entered is not valid. Please enter a valid command or enter Q to quit.");
+		System.out.println("The command entered is not valid. Please enter a valid command or enter Q to quit.\n");
 	}
 
 	/**
@@ -206,9 +210,9 @@ public class CarDealershipSimulator
 		if (!loaded) {
 			dealership.addCars(cars);
 			loaded = true;
-			System.out.println("Cars added to main dealership inventory. Enter `L` or `l` to display inventory");
+			System.out.println("Cars added to main dealership inventory. Enter `L` or `l` to display inventory\n");
 		} else {
-			System.out.println("Cars have already been added to inventory.");
+			System.out.println("Cars have already been added to inventory.\n");
 		}
 		return loaded;
 		}
@@ -222,7 +226,7 @@ public class CarDealershipSimulator
 	private static Car attemptReturn(CarDealership dealership, Car returnCar) {
 		try {
 			dealership.returnCar(returnCar);
-			System.out.println("Car returned back to dealership.");
+			System.out.println("Car returned back to dealership.\n");
 			returnCar = null;
 
 		} catch (IllegalArgumentException returnExcept) { 
@@ -242,9 +246,9 @@ public class CarDealershipSimulator
 		try {
 			File file = new File(filename);
 			parseAndPopulateCars(new Scanner(file), cars);
-			System.out.println("File Loaded.");
+			System.out.println("File Successfully Loaded.\n");
 		} catch (IOException loadException) {
-			System.out.println("File not found, attempting to create cars from demo list instead.");
+			System.out.println("File not found, attempting to create cars from demo list instead.\n");
 			parseAndPopulateCars(new Scanner(DEMO_CARS), cars);
 		}
 	}
@@ -303,6 +307,9 @@ public class CarDealershipSimulator
 				}
 			} catch (IllegalArgumentException exception) {
 				System.out.println(errorMessage);
+				continue;
+			} catch (InstantiationException exception) {
+				System.out.println(exception.getMessage());
 				continue;
 			}
 		}

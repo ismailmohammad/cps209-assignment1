@@ -36,7 +36,7 @@ class Car extends Vehicle implements Comparable<Car> {
      * @param AWD Whether the Car is AWD capable or 2WD
      * @param price Price of the car in dollars and cents.
      */
-    public Car(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price){
+    public Car(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price) throws InstantiationException {
         // The superclass constructor call implements the NUM_CAR_WHEELS instead of an extra parameter as
         // all cars have 4 wheels with the exception of some very uncommon 3 wheeled 'Cars'.
         super(mfr, color, power, NUM_CAR_WHEELS);
@@ -86,7 +86,7 @@ class Car extends Vehicle implements Comparable<Car> {
      * @return the string representation "MANUFACTURER COLOUR MODEL PRICE SAFEY_RATING MAX_RANGE"
      */
     public String display(){
-        return super.display() + " " + model + String.format(" %.1f$ ", price) + "SF: " + safetyRating + " RNG: " + maxRange ;
+        return super.display() + " " + model + String.format(" %.1f$ ", price) + "SF: " + safetyRating + " RNG: " + maxRange + (getAWD() ? " AWD" : " 2WD");
     }   
 
     /**

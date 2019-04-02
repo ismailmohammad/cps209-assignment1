@@ -23,7 +23,7 @@ class ElectricCar extends Car {
      * @param rechargeTime Int of number of minutes it takes to recharge car
      * @param batteryType String of the type of battery ie. "Lithium Ion", etc.
      */
-    public ElectricCar(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price, int rechargeTime, String batteryType) {
+    public ElectricCar(String mfr, String color, int power, Model model, int maxRange, double safetyRating, boolean AWD, double price, int rechargeTime, String batteryType) throws InstantiationException{
         // Call superclass's constructor method.
         super(mfr, color, power, model, maxRange, safetyRating, AWD, price);
         // Initialize electric car instance variables with respective values.

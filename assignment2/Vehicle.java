@@ -1,3 +1,6 @@
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * CPS 209 Assignment 2
  * Vehicle.java
@@ -9,9 +12,16 @@ public class Vehicle {
 	private String color;
 	private int power;
 	private int numWheels;
+	/** VIN number of vehicle 100-499 */
+	private int VIN;
+	/** Contains a set of used valid VIN numbers to ensure that each car has an unique VIN */
+	public static Set<Integer> usedVINs = new TreeSet<Integer>();
 	// Initialize public constants
 	public static final int ELECTRIC_MOTOR = 0;
 	public static final int GAS_ENGINE = 1;
+	// Minimum and Maximum Range of VINs (Min to Max inclusive) Min must be <= max
+	public static final int VIN_MAX = 499;
+	public static final int VIN_MIN = 100;
 	
 	/**
 	 * Constructor Method to create a vehicle object with the parameters
@@ -20,11 +30,25 @@ public class Vehicle {
 	 * @param power - Power of vehicle
 	 * @param numWheels - Number of wheels the vehicle has
 	 */
-	public Vehicle(String mfr, String color, int power, int numWheels) {
+	public Vehicle(String mfr, String color, int power, int numWheels) throws InstantiationException {
 		this.mfr = mfr;
 		this.color = color;
 		this.power = power;
 		this.numWheels = numWheels;
+		int maxNumVIN = VIN_MAX - VIN_MIN + 1; // Add 1 since the initial value is inclusive
+		// Generate Random VIN between 100 and 499
+		int generatedVIN = (int) (Math.random() * maxNumVIN + VIN_MIN);
+		// If the VIN number is already used, attempt to generate a new one.
+		while (usedVINs.contains(generatedVIN)) {
+			// If the number of available VIN has already been used, alert dealership
+			if (usedVINs.size() >= maxNumVIN) {
+				throw new InstantiationException("All " + maxNumVIN + " valid VIN numbers have been used. Cannot register this additional vehicle.");
+			}
+			generatedVIN = (int) (Math.random() * maxNumVIN + VIN_MIN);
+		}
+		// Sets the vehicle's VIN Number and add it to set of used VIN numbers.
+		this.VIN = generatedVIN;
+		usedVINs.add(generatedVIN);
 	}
 
 	/**
@@ -92,6 +116,14 @@ public class Vehicle {
 	}
 
 	/**
+	 * Fetches the VIN number of the vehicle.
+	 * @return the vIN
+	 */
+	public int getVIN() {
+		return VIN;
+	}
+
+	/**
 	 * Checks whether the vehicles have the same manufacturer, power, and number of wheels.
 	 * @param other - Other Vehicle Object to compare against
 	 * @return whether the two Vehicles are equal
@@ -113,6 +145,6 @@ public class Vehicle {
 	 * @return string representation of vehicle
 	 */
 	public String display() {
-		return getMfr() + " " + getColor();
+		return getVIN() + " " + getMfr() + " " + getColor();
 	}
 }
