@@ -1,7 +1,11 @@
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-
+/**
+ * CPS 209 Assignment 2
+ * Car.java
+ * @author Mohammad Ismail
+ */
 public class SalesTeam {
     /** LinkedList of Sales Team */
     private LinkedList<String> team;
@@ -49,7 +53,7 @@ public class SalesTeam {
      */
     public void display() {
         // Initialize return 
-        String teamString = "";
+        String teamString = "Team: ";
         ListIterator<String> iterator = this.team.listIterator();
         while (iterator.hasNext()) {
             teamString += iterator.next();
@@ -59,6 +63,24 @@ public class SalesTeam {
         }
         // Display the team.
         System.out.println(teamString);
+    }
+
+    /**
+     * Add a new Sales Person to the team.
+     * @param name First and Last name of the sales person.
+     */
+    public void hireSalesPerson(String name) {
+        // Add the new sales person to the team.
+        this.team.add(name);
+    }
+
+    /**
+     * Checks if an indicated person is a team member.
+     * @param name Name of Team member to check whether they exist.
+     * @return whether the individual is a team member or not
+     */
+    public boolean isTeamMember(String name) {
+        return team.contains(name);
     }
 
     /**

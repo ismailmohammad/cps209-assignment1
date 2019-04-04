@@ -3,7 +3,7 @@
  * ElectricCar.java
  * @author Mohammad Ismail
  */
-class ElectricCar extends Car {
+public class ElectricCar extends Car {
     // Electric Car Instance Variables
     private int rechargeTime; // Recharge time in minutes
     private String batteryType; // Type of battery of Car

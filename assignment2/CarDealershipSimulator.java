@@ -54,6 +54,8 @@ public class CarDealershipSimulator
 		CarDealership dealership = new CarDealership();
 		// Then create an (initially empty) array list of type Car
 		ArrayList<Car> cars = new ArrayList<Car>();
+		// Create a sales team object containing sales people of unmatched prowess
+		SalesTeam team = new SalesTeam();
 		// Then create some new car objects of different types
 		// Attempts to load files, otherwise sets program to demo inventory
 		attemptFileLoad("cars.txt", cars);
@@ -66,7 +68,7 @@ public class CarDealershipSimulator
 		String command;
 		// Greet User.
 		System.out.println("Welcome to Car Dealership Simulator 2.0.0 (Goat Rentals coming soon in v11.11.0)");
-		System.out.print("Please enter a command or Q to quit: ");
+		promptCommand();
 		// while the scanner has another line
 		while (in.hasNextLine()) {
 			// read the input line
@@ -108,6 +110,7 @@ public class CarDealershipSimulator
 							carIndex = Integer.parseInt(commandLine.next());
 						} catch (IllegalArgumentException parseExcept) {
 							System.out.println("Invalid BUY argument. Please enter a positive whole number after BUY\n");
+							promptCommand();
 							continue; // Continue to the next command.
 						}
 						// Attempt to purchase the indicated Car
@@ -157,6 +160,7 @@ public class CarDealershipSimulator
 						} catch (IllegalArgumentException parseExcept) {
 							System.out.println("Invalid FPR arguments. Please enter a minimum and maximum price, where both are positive and minimum is less than maximum");
 							// Continue loop to the propt for next command. ie. ski attempt to set to filter
+							promptCommand();
 							continue;
 						}
 						// Try Setting Filter with parsed arguments
@@ -170,25 +174,55 @@ public class CarDealershipSimulator
 				// Filter by Electric Cars (only show electric vehicles)
 				} else if (command.equalsIgnoreCase("FEL")) {
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
-					else { dealership.filterByElectric();System.out.println("Electric Car filter set."); }
+					else { dealership.filterByElectric();System.out.println("Electric Car filter set.\n"); }
 				// Filter by All Wheel Drive capable Vehicles (only show AwD)
 				} else if (command.equalsIgnoreCase("FAW")) {
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
-					else { dealership.filterByAWD(); System.out.println("All Wheel Drive filter set."); }
+					else { dealership.filterByAWD(); System.out.println("All Wheel Drive filter set.\n"); }
 				// Clear all set filters (AWD, Electric, Price)
 				} else if (command.equalsIgnoreCase("FCL")) {
 					// Ensure command isn't followed by another token/argument.
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
-					else { dealership.filtersClear();System.out.println("All Filters Cleared."); }
+					else { dealership.filtersClear();System.out.println("All Filters Cleared.\n"); }
+				} else if (command.equalsIgnoreCase("SALES")) {
+					// Check if number of arguments exceeds single argument
+					if (tokenNum > (COMMAND_WITHOUT_ARGS + 1)) {
+						System.out.println("SALES can only be followed by a single sub command. Either TEAM, TOPSP, STATS, or a month number between 1 and 12.\n");
+					// Check if no arguments are provided. ie. asking for all sales for the year.
+					} else if (tokenNum == COMMAND_WITHOUT_ARGS) {
+						// Display all the sales for the year 2019.
+						System.out.println("Prin");
+					// > 1 argument and just SALES have been handled, leaving the else as exactly 1 condition.
+					} else {
+						String subcommand = commandLine.next();
+						if (subcommand.equalsIgnoreCase("TEAM")) {
+							// Print Names of all the Sales People
+							team.display();
+						} else if (subcommand.equalsIgnoreCase("TOPSP")) {
+							System.out.println("Yeet is the Top SP");
+						} else if (subcommand.equalsIgnoreCase("STATS")) {
+							System.out.println("The stats for the year is yeet.");
+						} else {
+							// Check if the argument is an integer between 1 and 12
+							// Otherwise prompt for a valid command and recheck for new command line.
+							promptValid();
+							promptCommand();
+							continue;
+						}
+					}
 				} else {
 					promptValid();
 				} 
 			} else {
 				promptValid();
 			}
-			System.out.print("Please enter a command or Q to quit: ");
+			promptCommand();
 		}
 
+	}
+
+	private static void promptCommand() {
+		System.out.print("Please enter a command or Q to quit: ");
 	}
 
 	/**

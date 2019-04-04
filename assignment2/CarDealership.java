@@ -126,7 +126,7 @@ public class CarDealership {
             // Fails if AWD Filter flag is set to true however car is not AWD
             boolean failAWDFilter = AWDFilter && !(cars.get(index).getAWD());
             if (!failAWDFilter && !failPriceFilter && !failElectricFilter) {
-                System.out.println(index + " " + selectedCar.display());
+                System.out.println(selectedCar.display());
             }
         }
         System.out.println(); // New line at end to separate inventory within commandline

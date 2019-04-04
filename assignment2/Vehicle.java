@@ -145,6 +145,6 @@ public class Vehicle {
 	 * @return string representation of vehicle
 	 */
 	public String display() {
-		return getVIN() + " " + getMfr() + " " + getColor();
+		return "VIN: " + getVIN() + " " + getMfr() + " " + getColor();
 	}
 }

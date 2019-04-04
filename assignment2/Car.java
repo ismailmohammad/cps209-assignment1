@@ -3,7 +3,7 @@
  * Car.java
  * @author Mohammad Ismail
  */
-class Car extends Vehicle implements Comparable<Car> {
+public class Car extends Vehicle implements Comparable<Car> {
     // Instance Variables
     private String model;
     private int maxRange;
