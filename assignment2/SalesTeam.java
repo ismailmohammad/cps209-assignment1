@@ -61,8 +61,8 @@ public class SalesTeam {
                 teamString += ", ";
             }
         }
-        // Display the team.
-        System.out.println(teamString);
+        // Display the team along with an extra line for padding.
+        System.out.println(teamString + "\n");
     }
 
     /**

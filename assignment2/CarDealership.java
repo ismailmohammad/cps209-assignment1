@@ -18,13 +18,19 @@ public class CarDealership {
     // Price filter min, max
     private double minPrice;
     private double maxPrice;
+    // Sales Team
+    SalesTeam team;
 
     /**
      * Basic CarDealership Constructor which creates an empty ArrayList of Type Car
      * and sets the instance variable cars to it, initializing the dealership's inventory.
+     * Also initializes the dealership's sales team.
      */
     public CarDealership() {
         cars = new ArrayList<Car>();
+        // Create a sales team object containing sales people of unmatched prowess and assign it to dealership
+		team = new SalesTeam();
+
     }
 
     /**
@@ -91,6 +97,15 @@ public class CarDealership {
             throw new IndexOutOfBoundsException("Index of Car must be within list of cars displayed and cannot be negative.");
         }
         return cars.remove(index);
+    }
+
+    /**
+     * Attempts to purchase a Car from the dealership using the VIN number provided as displayed in displayInventory().
+     * @param VIN - VIN of the car
+     * @return 
+     */
+    public String buyCar(String VIN) throws IllegalArgumentException {
+        return "Bought Car";
     }
 
     /**
@@ -200,5 +215,12 @@ public class CarDealership {
      */
     public void sortByMaxRange() {
         Collections.sort(cars, rangeComparator);
+    }
+
+    /** 
+     * Displays the Dealership's sales team.
+     */
+    public void displayTeam() {
+        team.display();
     }
 }

@@ -54,8 +54,6 @@ public class CarDealershipSimulator
 		CarDealership dealership = new CarDealership();
 		// Then create an (initially empty) array list of type Car
 		ArrayList<Car> cars = new ArrayList<Car>();
-		// Create a sales team object containing sales people of unmatched prowess
-		SalesTeam team = new SalesTeam();
 		// Then create some new car objects of different types
 		// Attempts to load files, otherwise sets program to demo inventory
 		attemptFileLoad("cars.txt", cars);
@@ -197,7 +195,7 @@ public class CarDealershipSimulator
 						String subcommand = commandLine.next();
 						if (subcommand.equalsIgnoreCase("TEAM")) {
 							// Print Names of all the Sales People
-							team.display();
+							dealership.displayTeam();
 						} else if (subcommand.equalsIgnoreCase("TOPSP")) {
 							System.out.println("Yeet is the Top SP");
 						} else if (subcommand.equalsIgnoreCase("STATS")) {
