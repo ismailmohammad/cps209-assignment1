@@ -4,9 +4,12 @@
  * @author Mohammad Ismail
  */
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.Random;
 
 public class CarDealership {
     // Arraylist of Cars
@@ -19,7 +22,15 @@ public class CarDealership {
     private double minPrice;
     private double maxPrice;
     // Sales Team
-    SalesTeam team;
+    private SalesTeam team;
+    // Accounting System for the dealership
+    private AccountingSystem system;
+    // Initialize default year for dealership transactions.
+    private static final int CURRENT_YEAR = 2019;
+    // Number of months in a year
+    public static final int NUM_MONTHS_YEAR = 12;
+    // Random Generator
+    private static Random random = new Random();
 
     /**
      * Basic CarDealership Constructor which creates an empty ArrayList of Type Car
@@ -29,8 +40,9 @@ public class CarDealership {
     public CarDealership() {
         cars = new ArrayList<Car>();
         // Create a sales team object containing sales people of unmatched prowess and assign it to dealership
-		team = new SalesTeam();
-
+        team = new SalesTeam();
+        // Create an Accounting system object for the dealership to use.
+        system = new AccountingSystem();
     }
 
     /**
@@ -39,6 +51,10 @@ public class CarDealership {
      */
     public CarDealership(ArrayList<Car> cars) {
         cars = new ArrayList<Car>();
+        // Create a sales team object containing sales people of unmatched prowess and assign it to dealership
+        team = new SalesTeam();
+        // Create an Accounting system object for the dealership to use.
+        system = new AccountingSystem();
         addCars(cars);
     }
     
@@ -86,41 +102,92 @@ public class CarDealership {
     }
 
     /**
-     * Attempts to purchase Car from dealership via index of Car as displayed by displayInventory()
-     * @param index
-     * @return returns a reference to the Car object being purchased.
-     * @throws IndexOutOfBoundsException
-     */
-    public Car buyCar(int index) throws IndexOutOfBoundsException {
-        // If index is greater than size of ArrayList of Cars less 1 or if negative, throw IOOBE
-        if (index > (cars.size() -1) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Index of Car must be within list of cars displayed and cannot be negative.");
-        }
-        return cars.remove(index);
-    }
-
-    /**
      * Attempts to purchase a Car from the dealership using the VIN number provided as displayed in displayInventory().
      * @param VIN - VIN of the car
-     * @return 
+     * @return Receipt of purchase if successful.
      */
-    public String buyCar(String VIN) throws IllegalArgumentException {
-        return "Bought Car";
+    public String buyCar(int VIN) throws IllegalArgumentException {
+        // Checks if number of cars is greater than 0
+        if (cars.size() == 0) {
+            throw new IllegalArgumentException("There are no cars in this delearship to purchase. Please add cars.\n");
+        }
+        // Initialize car to return as null;
+        Car carToBuy = null;
+        // Checks if the VIN is valid
+        for (Car car : cars) {
+            // If the VIN number matches up to a car within the dealership, set the purchase car as a reference to it.
+            if (VIN == car.getVIN()) {
+                carToBuy = car;
+                // Discontinue loop as the car has been found.
+                break;
+            }
+        }
+        // Check Validity of the VIN and throw IllegalArgumentException if it is invalid
+        if (carToBuy == null) {
+            throw new IllegalArgumentException("Invalid VIN number entered, please enter a valid VIN number from the inventory.\n");
+        }
+        // Acquire random sales person to whom the sales commission should go towards.
+        String randomSalesPerson = team.selectTeamMember();
+        // Generate a random month to initialize the date with.
+        int randomMonth = (int) (Math.random() * NUM_MONTHS_YEAR);
+        // Initialize the date with the current year and random month and the day as 1 as an initial placeholder.
+        Calendar date = new GregorianCalendar(CURRENT_YEAR, randomMonth, 1);
+        // Then generate a random day using the actual maximum day of the month generated and that as the day.
+        int randomDay = random.nextInt(date.getActualMaximum(Calendar.DAY_OF_MONTH)) + 1;
+        date.set(Calendar.DAY_OF_MONTH, randomDay);
+        // Remove the car from the ArrayList of cars
+        cars.remove(carToBuy);
+        // Create a Purchase transaction with the indicated date, Car, sales person, and the car's price as the sale price and return the sale receipt.
+        return system.add(date, carToBuy, randomSalesPerson, Transaction.Type.BUY, carToBuy.getPrice());
     }
 
     /**
      * Attempts to return a car to the dealership and throws IllegalArgumentException
      * if the reference to the Car object is null. ie. an invalid reference.
-     * @param car Car object which is to be returned to the dealership.
+     * @param transactionID ID of a transaction to return.
      * @throws IllegalArgumentException
      */
-    public void returnCar(Car car) throws IllegalArgumentException {
-        // Make sure Car reference is not null
-        if (car == null) {
-            throw new IllegalArgumentException("The last Car bought has already been returned or a purchase has not yet occurred. Return will not be processed.");
+    public void returnCar(int transactionID) throws IllegalArgumentException {
+        // Make sure transaction ID is valid
+        Transaction transaction = system.getTransaction(transactionID);
+        if (transaction == null) {
+            throw new IllegalArgumentException("Invalid Transaction ID Entered. Please enter a valid ID.\n");
         }
-        // Add Car to the ArrayList
-        cars.add(car);
+        if (!transaction.getTransactionType().equals("BUY")) {
+            throw new IllegalArgumentException("Only purchases or BUY transactions can be returned. The transaction id entered is not a purchase.\n");
+        }
+        // Retrive the Car object tied to the transaction.
+        Car carToReturn = transaction.getCar();
+        int returnCarVIN = carToReturn.getVIN();
+        // Ensure that the Car has not already been returned, or throw exception and prompt user if it already has.
+        if (system.carAlreadyReturned(returnCarVIN)) {
+            throw new IllegalArgumentException("This Car has already been returned. VIN: " + returnCarVIN + "\n");
+        }
+        // Retrieve the transaction's original purchase date.
+        Calendar date = transaction.getDate();
+        // Generate New Date within same month which is later than the purchase date
+        int currentDay = date.get(Calendar.DAY_OF_MONTH);
+        int maxDayInMonth = date.getActualMaximum(Calendar.DAY_OF_MONTH);
+        // Int to hold the generated day.
+        int generatedDay;
+        // If the purchase date is the last of the month, then there is no more days within the same month which is later
+        // As such, the return date is set to the first of the following month. (Current Design Choice). Alternatively, any day of the
+        // following month could have been chosen or this edge case could have been made so that the time within the day is later than purchase, etc.
+        if (currentDay == maxDayInMonth) {
+            // Set the day to the first of the month.
+            generatedDay = 1;
+            // Set the month to the following month.
+            date.set(Calendar.MONTH, (date.get(Calendar.MONTH) + 1));
+        } else {
+            // Add one to current day as the date is required to be after the current day and then add the (max - min)
+            generatedDay = (currentDay + 1) + random.nextInt(date.getActualMaximum(Calendar.DAY_OF_MONTH) - currentDay);
+        }
+        // Set the day of the month to the generated day.
+        date.set(Calendar.DAY_OF_MONTH, generatedDay);
+        // Return via the same Sales Person, and initial sale price and display the receipt.
+        System.out.println(system.add(date, carToReturn, transaction.getSalesPerson(), Transaction.Type.RET, transaction.getSalePrice()));
+        // Add Car back to the ArrayList
+        cars.add(carToReturn);
     }
 
     /**
@@ -221,6 +288,40 @@ public class CarDealership {
      * Displays the Dealership's sales team.
      */
     public void displayTeam() {
+        // Call the Sales Team's display method.
         team.display();
+    }
+
+    /**
+     * Display the Accounting Stats for Dealership sales for the year.
+     */
+    public void displaySalesStats() {
+        // call the Accounting System's statistics method
+        system.displayStatistics();
+    }
+
+    /**
+     * Display all the Transactions for the year including both purchases and returns.
+     */
+    public void displayTransactions() {
+        // Call the Accounting System's transaction display method.
+        system.displayTransactions();
+    }
+
+    /**
+     * Retreives and display's the dealership's Top Sales Person/People
+     */
+    public void displayTopSalesPerson() {
+        // Print out the Top Sales along with a new line for padding/aesthetics.
+        System.out.println(system.getTopSalesPerson() + "\n");
+    }
+
+    public void displayMonthlySales(int month) throws IllegalArgumentException {
+        // Ensure that the month entered is between 0 and 11 as expected.
+        if (month < 0 || month > (NUM_MONTHS_YEAR - 1)) {
+            throw new IllegalArgumentException("Month must be between 0 to 11, where 0 is January and 11 is December");
+        }
+        // Display the monthly sales.
+        system.displayMonthlySales(month);
     }
 }

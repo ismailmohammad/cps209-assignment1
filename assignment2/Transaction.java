@@ -70,6 +70,14 @@ public class Transaction {
     public String getTransactionType() {
         return transactionType;
     }
+
+    /**
+     * Fetch the Car associated with the transaction.
+     * @return reference to Car object
+     */
+    public Car getCar() {
+        return car;
+    }
     
     /**
      * Displays the transaction data in the format as shown below:

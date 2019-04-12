@@ -25,6 +25,8 @@ public class CarDealershipSimulator
 	 * number of arguments.
 	 */
 	public static final int COMMAND_WITHOUT_ARGS = 1;
+	/** Location of the Transaction ID within a receipt "ID: " -> Indices 0,1,2,3 */
+	public static final int TRANSACTION_ID_LOCATION = 4;
 
 	/**
 	 * A list of default cars identical to the provided cars.txt plus
@@ -47,8 +49,8 @@ public class CarDealershipSimulator
 		
 	public static void main(String[] args)
 	{
-		/** Reference variable to the last Car bought from the dealership. Initially null */
-		Car lastCarBought = null;
+		/** Integer value of the previous transaction. Initially set to 0 an invalid ID */
+		int lastTransactionID = 0;
 		boolean loaded = false;
 		// Create a CarDealership object
 		CarDealership dealership = new CarDealership();
@@ -97,33 +99,56 @@ public class CarDealershipSimulator
 				} else if (command.equalsIgnoreCase("BUY")) {
 					// Check if number of arguments exceeds single argument
 					if (tokenNum > (COMMAND_WITHOUT_ARGS + 1)) {
-						System.out.println("BUY takes exactly 1 argument, the Car's index. More than 1 was provided.");
+						System.out.println("BUY takes exactly 1 argument, the Car's index. More than 1 was provided.\n");
 					// Check if no arguments are provided.
 					} else if (tokenNum == COMMAND_WITHOUT_ARGS) {
-						System.out.println("Please enter which Car number you'd like to purchase. ie. BUY 0"); 
+						System.out.println("Please enter the VIN number of the Car you'd like to purchase. ie. BUY 420\n"); 
 					} else {
-						int carIndex;
+						int VIN;
 						// Check whether the next argument is a valid integer.
 						try {
-							carIndex = Integer.parseInt(commandLine.next());
+							VIN = Integer.parseInt(commandLine.next());
 						} catch (IllegalArgumentException parseExcept) {
-							System.out.println("Invalid BUY argument. Please enter a positive whole number after BUY\n");
+							System.out.println("Invalid BUY argument. Please enter a positive whole number after BUY as the VIN\n");
 							promptCommand();
 							continue; // Continue to the next command.
 						}
 						// Attempt to purchase the indicated Car
 						try {
-							lastCarBought = dealership.buyCar(carIndex);
-							System.out.printf("Purchased Car: %s\n", lastCarBought.display());
-						} catch (IndexOutOfBoundsException indexExcept) {
-							System.out.println(indexExcept.getMessage());
+							// Attempt Car purchase via VIN
+							String receipt = dealership.buyCar(VIN);
+							// Use Scanner to isolate the transaction ID
+							Scanner receiptLine = new Scanner(receipt.substring(TRANSACTION_ID_LOCATION));
+							// Set the last car bought to its transaction ID.
+							lastTransactionID = receiptLine.nextInt();
+							// Close the scanner to prevent resource leak
+							receiptLine.close();
+							// Display the receipt to the user along with a new line for padding/aesthetics
+							System.out.println(receipt + "\n");
+						} catch (IllegalArgumentException buyCarExcept) {
+							System.out.println(buyCarExcept.getMessage());
 						}
 					}
 				// Check if the command is RET and isn't followed by any other tokens
 				} else if (command.equalsIgnoreCase("RET")) {
-					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
+					// If the number of arguments exeeds 1
+					if (tokenNum > COMMAND_WITHOUT_ARGS + 1) { promptValid();}
 					// Attempt to return the last Car bought (if applicable)
-					else { lastCarBought = attemptReturn(dealership, lastCarBought); }
+					else if (tokenNum == COMMAND_WITHOUT_ARGS) { 
+						lastTransactionID = attemptReturn(dealership, lastTransactionID); 
+					} else {
+						// Remaining edge case is 1 argument
+						int transactionID;
+						try {
+							// Attempt to parse transaction ID.
+							transactionID = Integer.parseInt(commandLine.next());
+							// Attempt to return Car.
+							attemptReturn(dealership, transactionID);
+						} catch (IllegalArgumentException exceptionForID) {
+							System.out.println(exceptionForID.getMessage());
+							promptValid();
+						}
+					}
 				// Add loaded car list to inventory if not already loaded.
 				} else if (command.equalsIgnoreCase("ADD")) {
 					if (tokenNum > COMMAND_WITHOUT_ARGS) { promptValid();}
@@ -185,11 +210,11 @@ public class CarDealershipSimulator
 				} else if (command.equalsIgnoreCase("SALES")) {
 					// Check if number of arguments exceeds single argument
 					if (tokenNum > (COMMAND_WITHOUT_ARGS + 1)) {
-						System.out.println("SALES can only be followed by a single sub command. Either TEAM, TOPSP, STATS, or a month number between 1 and 12.\n");
+						System.out.println("SALES can only be followed by a single sub command. Either TEAM, TOPSP, STATS, or a month number between 0 and 11.\n");
 					// Check if no arguments are provided. ie. asking for all sales for the year.
 					} else if (tokenNum == COMMAND_WITHOUT_ARGS) {
-						// Display all the sales for the year 2019.
-						System.out.println("Prin");
+						// Display all the sales for the year 2019 belonging to the dealership.
+						dealership.displayTransactions();
 					// > 1 argument and just SALES have been handled, leaving the else as exactly 1 condition.
 					} else {
 						String subcommand = commandLine.next();
@@ -197,15 +222,24 @@ public class CarDealershipSimulator
 							// Print Names of all the Sales People
 							dealership.displayTeam();
 						} else if (subcommand.equalsIgnoreCase("TOPSP")) {
-							System.out.println("Yeet is the Top SP");
+							// Display the Top Sales Person for the year and the number of cars they sold.
+							dealership.displayTopSalesPerson();
 						} else if (subcommand.equalsIgnoreCase("STATS")) {
-							System.out.println("The stats for the year is yeet.");
+							// Display Sales Statistics for the year.
+							dealership.displaySalesStats();
 						} else {
+							int month;
 							// Check if the argument is an integer between 1 and 12
-							// Otherwise prompt for a valid command and recheck for new command line.
-							promptValid();
-							promptCommand();
-							continue;
+							try {
+								month = Integer.parseInt(subcommand);
+								dealership.displayMonthlySales(month);
+							} catch (IllegalArgumentException notIntException) {
+								System.out.println("SALES m works through entering a month from 0-11 where 0 is January and 11 is December.");
+								// Otherwise prompt for a valid command and recheck for new command line.
+								promptValid();
+								promptCommand();
+								continue;
+							}
 						}
 					}
 				} else {
@@ -252,19 +286,22 @@ public class CarDealershipSimulator
 	/**
 	 * Attempt to return the last purchased car (if exists) to the dealership.
 	 * @param dealership Reference to CarDealership object
-	 * @param returnCar Reference to lastCarBought object. can either be null or
-	 * contain a valid Car object. Handles exception accordingly.
+	 * @param transactionID Transaction ID of the last car purchased.
 	 */
-	private static Car attemptReturn(CarDealership dealership, Car returnCar) {
+	private static int attemptReturn(CarDealership dealership, int transactionID) {
 		try {
-			dealership.returnCar(returnCar);
+			if (transactionID == 0) {
+				throw new IllegalArgumentException("Last purchased Car has already been returned to dealership. Or a purchase has not yet been made.\nTry using RET with a transaction ID of a Purchase.\n");
+			}
+			dealership.returnCar(transactionID);
 			System.out.println("Car returned back to dealership.\n");
-			returnCar = null;
+			// Set the transaction ID to one that is invalid.
+			transactionID = 0;
 
 		} catch (IllegalArgumentException returnExcept) { 
 			System.out.println(returnExcept.getMessage()); 
 		}
-		return returnCar;
+		return transactionID;
   }
 
   /**

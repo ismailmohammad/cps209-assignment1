@@ -11,9 +11,11 @@ public class CalendarTester
 		//https://www.mkyong.com/java/java-date-and-calendar-examples/
 		 
 		Calendar calendar;
-		calendar = new GregorianCalendar(2013,1,28,13,24,56);
+		calendar = new GregorianCalendar(2013,1, 1);
+		System.out.println(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+
 		
 		int year       = calendar.get(Calendar.YEAR);
 		int month      = calendar.get(Calendar.MONTH); // Jan = 0, dec = 11
@@ -73,7 +75,7 @@ public class CalendarTester
 		// Subtract 10 days
 		calendar.add(Calendar.DAY_OF_MONTH, -10);
 		System.out.println("Date : " + sdf.format(calendar.getTime()));
-		
+	
 		
 	}
 
